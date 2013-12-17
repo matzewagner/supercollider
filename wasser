@@ -1,6 +1,8 @@
 // wasser
 // author: Matthias Wagner, date: October 2013
 
+// to adjust midinotes or other variables, resend proxy 'p' to server 
+
 p = ProxySpace.new; // declare new ProxySpace p
 p.fadeTime = 10; // fade time between proxies
 p[\out].play; // play proxy p
