@@ -1,0 +1,39 @@
+// wasser
+// author: Matthias Wagner, date: October 2013
+
+p = ProxySpace.new; // declare new ProxySpace p
+p.fadeTime = 10; // fade time between proxies
+p[\out].play; // play proxy p
+
+(
+p[\out] =
+{
+	var trigger, fund, synthA, n, a, b, c, d;
+a = ([48,50,52,59,66]*1.0).midicps.scramble;
+b = ([48,50,52,61,66]*1.0).midicps.scramble;
+c = ([47,50,52,62,64]*1.0).midicps.scramble;
+d = ([45,50,52,62,63]*1.0).midicps.scramble;
+e = ([45,50,52,59,61]*1.0).midicps.scramble;
+
+	synthA = Array.fill(5, // fill array with 5 elements
+		{
+			n = 0.5; // number of partials
+			fund = a; // choose Midi note array (a,b,c or d) for fundamental frequency
+			trigger = Dust.kr(1/3); // random trigger
+			Pan2.ar( // stereo panning
+				Mix.ar( // mix multi channel array down to single channel
+					Array.fill(n, // fill an array with n elements
+						{arg counter;
+							var partial;
+							partial = counter + 1;
+							SinOsc.ar(fund*(partial)) * // define frequency as fund * partial
+							EnvGen.kr(Env.adsr(0.2, 0, 5.0, 7.0), // adsr envelope
+								trigger, 1/partial  // scale according to number of partials
+							) * max(0, LFNoise1.kr(rrand(1.0, 1.3))) // multiply with random value between 1.0 - 2.0
+					})
+				)*0.4, // multiply to scale volume
+				1.0.rand2)
+	});
+	Mix.ar(synthA)*0.8
+};
+)
